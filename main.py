@@ -19,6 +19,7 @@ class App(QtWidgets.QMainWindow):
         self.ui.pushButton_3.clicked.connect(self.clear)
 
     def get(self):
+        if self.ui.lineEdit.text() == '' and self.ui.lineEdit_2.text() == '' and self.ui.lineEdit_3.text() == '': return
         self.thread = QtCore.QThread()
         self.signal = DParse(self.ui.lineEdit.text(), self.ui.lineEdit_2.text(), int(self.ui.lineEdit_3.text()))
         self.signal.moveToThread(self.thread)
@@ -54,11 +55,13 @@ class App(QtWidgets.QMainWindow):
 
     def save(self):
         fp, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', filter='DAT files (*.dat)')
+        if len(fp) == 0: return
         with open(fp, 'wb') as f:
             pickle.dump(self.list, f)
 
     def load(self):
         fp, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', filter='DAT files (*.dat)')
+        if len(fp) == 0: return
         with open(fp, 'rb') as f:
             msg = pickle.load(f)
         for i in msg['messages']:
